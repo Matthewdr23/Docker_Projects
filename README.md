@@ -6,4 +6,5 @@ the option to get hands on experience with Docker Containers and system hardenin
 
 ## Table of Contents
 1. [Building your First Web-Server]()
-2. [How to Harden the Newly Created Web Server]()
+2. [Docker Networking Documentation]()
+3. [How to Harden the Newly Created Web Server]()
