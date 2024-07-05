@@ -88,12 +88,11 @@ Develop an automated security testing pipeline that integrates Docker containers
 - **Milestone 5:** Security Testing and Reporting Configured
 - **Milestone 6:** Documentation and Training Completed
 - **Milestone 7:** Testing and Validation Completed
-- **Milestone 8:** Pipeline Deployed to Production
 
 ## Resources
 - **Tools:** Docker, Jenkins/GitLab CI, OWASP ZAP, Bandit
 - **Technologies:** Python, Flask (or another web framework), Shell scripting
-- **Team:** Project Manager, DevOps Engineer, Security Analyst, Developer
+
 
 ## Risk Management
 - **Potential Risks:**
