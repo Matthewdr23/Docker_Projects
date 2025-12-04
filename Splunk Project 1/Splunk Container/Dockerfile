@@ -1,2 +1,3 @@
-FROM splunk:latest
+FROM splunk/splunk:latest
+
 
