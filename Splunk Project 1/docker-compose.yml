@@ -11,7 +11,7 @@ services:
     environment:
       - SPLUNK_START_ARGS=--accept-license
       # !! MANDATORY: Set a strong password for the admin user !!
-      - SPLUNK_PASSWORD=splunk
+      - SPLUNK_PASSWORD=${SPLUNK_ADMIN_PASSWORD}
       # Optional: To persist configuration and data
     volumes:
       - splunk_data:/opt/splunk/var
