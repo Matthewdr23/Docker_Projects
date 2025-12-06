@@ -1,4 +1,4 @@
-version: '4.53.0'
+version: '3.8' # Upgraded version for modern features
 
 services:
   splunk:
@@ -6,23 +6,60 @@ services:
     container_name: splunk-server
     hostname: splunk
     ports:
-      # Format is: HOST_PORT:CONTAINER_PORT
+      # Splunk Web UI
       - "8000:8000"
+      # HEC Port (Recommended for modern log ingestion)
+      - "8088:8088" 
     environment:
       - SPLUNK_START_ARGS=--accept-license
       # !! MANDATORY: Set a strong password for the admin user !!
       - SPLUNK_PASSWORD=${SPLUNK_ADMIN_PASSWORD}
-      # Optional: To persist configuration and data
     volumes:
       - splunk_data:/opt/splunk/var
       - splunk_etc:/opt/splunk/etc
+    networks:
+      - splunk-net # Assign to the explicit network
 
+# --- 1. The Application Service (The log generator) ---
+  web-app:
+    build: ./web-app-folder
+    container_name: Juiceshop
+    # Define a shared volume for logs
+    volumes:
+      - app_logs:/var/log/app 
+    networks:
+      - splunk-net # Assign to the explicit network
 
-  FTP Container:
-    build: .\FTP Container
-    ports:
-      - "21"
-# All Volumes will be placed in this section.
+# --- 2. The Universal Forwarder Sidecar ---
+  app-forwarder:
+    image: splunk/universalforwarder:latest
+    container_name: app-forwarder
+    environment:
+      # CRITICAL: Tell the forwarder the hostname and HEC port of the Splunk receiver
+      - SPLUNK_FORWARD_SERVER=splunk-server:8088 
+      - SPLUNK_START_ARGS=--accept-license
+      # Note: SPLUNK_USER=root is risky, consider using a less privileged user if possible
+      - SPLUNK_USER=root 
+      - SPLUNK_PASSWORD=${SPLUNK_ADMIN_PASSWORD} 
+    volumes:
+      # Mount the SAME named volume to access the logs from the web-app container
+      - app_logs:/var/log/app
+      # Map the forwarder's local configuration directory for persistence
+      - forwarder_conf:/opt/splunkforwarder/etc/system/local
+      # <<< CRITICAL ADDITION: Mount the inputs.conf file >>>
+      # The file 'forwarder-inputs.conf' on your host is mounted into the container's config path.
+      - ./config/forwarder-inputs.conf:/opt/splunkforwarder/etc/apps/log_inputs/local/inputs.conf 
+    networks:
+      - splunk-net # Assign to the explicit network
+
+# --- Define the volumes ---
 volumes:
   splunk_data:
   splunk_etc:
+  app_logs: # This is the shared volume
+  forwarder_conf:
+
+# --- Define the network ---
+networks:
+  splunk-net:
+    driver: bridge
