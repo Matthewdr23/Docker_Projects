@@ -1,0 +1,22 @@
+FROM ubuntu:latest
+
+# 1. Update the system and install necessary tools (optional, but good practice)
+RUN apt-get update && apt-get install -y \
+    bash \
+    locales \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Copy the user list and the script into the container
+# Use ADD or COPY. COPY is generally preferred for local files.
+COPY user_list.txt /tmp/user_list.txt
+COPY add_users.sh /add_users.sh
+
+# 3. Grant execution permission to the script
+RUN chmod +x /add_users.sh
+
+# 4. Execute the script to create the users
+# This happens during the build process, so the users are permanent parts of the image.
+RUN /add_users.sh
+
+# 5. Define the default command to run when the container starts (e.g., stay alive)
+CMD ["bash"]
