@@ -1,0 +1,40 @@
+version: '3.8' # Use a recent stable version
+
+services:
+  # --- 1. The Application Server Container (e.g., a web service) ---
+  Ubuntu_Instance 1:
+    # Use 'build' if you have a custom Dockerfile for this container
+    build:
+      context: ./Ubuntu_Instance 1
+      dockerfile: Dockerfile
+    
+    container_name: ubuntu_instance_1
+    # Mount a volume for configuration or logs
+    volumes:
+      - app_logs:/var/log/app
+      
+    # Assign the service to the custom network
+    networks:
+      - ubuntu_net
+  Ubuntu_Instance 2:
+    # Use 'build' if you have a custom Dockerfile for this container
+    build:
+      context: ./Ubuntu_Instance 2
+      dockerfile: Dockerfile
+    
+    container_name: ubuntu_instance_2
+    # Mount a volume for configuration or logs
+    volumes:
+      - app_logs:/var/log/app
+      
+    # Assign the service to the custom network
+    networks:
+      - ubuntu_net
+
+volumes:
+  app_logs:
+
+# Custom Network:
+networks:
+  ubuntu-net:
+    driver: bridge 
