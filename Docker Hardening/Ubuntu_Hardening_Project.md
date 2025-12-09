@@ -105,6 +105,4 @@ The scope of this project includes setting up the development environment, creat
 ## Additional Resources
 - [Docker Documentation](https://docs.docker.com/)
 - [Ubuntu Docker Hub](https://hub.docker.com/_/ubuntu)
-- [Docker Bench for Security](https://github.com/docker/docker-bench-security)
-- [Clair - Vulnerability Static Analysis](https://github.com/quay/clair)
-- [Trivy - Vulnerability Scanner for Containers](https://github.com/aquasecurity/trivy)
+
